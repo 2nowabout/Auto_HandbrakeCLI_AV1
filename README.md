@@ -3,4 +3,5 @@ I did this mostly for saving HDD space of nvidia instant replay but can be editt
 
 ### Remember
 Edit the paths accordingly in the python script
+
 It uses the nvenc AV1 encoder so make sure you have a RTX 4000 GPU
