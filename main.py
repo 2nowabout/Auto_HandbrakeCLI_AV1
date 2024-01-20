@@ -2,10 +2,14 @@ import os
 import subprocess
 import threading
 
-# Create a lock for reencoding
-encode_lock = threading.Lock()
 
 FFPROBE_PATH = r"D:\Programs\ffmpeg\bin\ffprobe.exe"  # Update this path accordingly
+HANDBRAKE_PATH = "D:\Programs\HandBrake\HandBrakeCLI.exe"  # Update with the full path if HandBrakeCLI
+
+
+
+# Create a lock for reencoding
+encode_lock = threading.Lock()
 
 # Function to get video width using ffprobe
 def get_video_width(file_path):
@@ -25,7 +29,7 @@ def delete_empty_folders(root_folder):
             print(f"Deleting empty folder: {folder_path}")
             os.rmdir(folder_path)
 
-def reencode_to_av1(input_folder, handbrake_path):
+def reencode_to_av1(input_folder):
     for root, dirs, files in os.walk(input_folder):
         for file in files:
             if file.lower().endswith(('.mp4', '.mkv', '.avi', '.mov')) and "av1" not in file.lower():
@@ -33,7 +37,7 @@ def reencode_to_av1(input_folder, handbrake_path):
                 output_file_path = os.path.join(root, f"{os.path.splitext(file)[0]}_av1.mp4")
 
                 command = [
-                    handbrake_path,
+                    HANDBRAKE_PATH,
                     "--input", input_file_path,
                     "--output", output_file_path,
                     "--align-av",
@@ -58,7 +62,6 @@ def reencode_to_av1(input_folder, handbrake_path):
                 print(f"Old file deleted: {input_file_path}")
 def main():
     folder_to_check = input("Enter the path of the folder to check: ")
-    handbrake_path = "D:\Programs\HandBrake\HandBrakeCLI.exe"  # Update with the full path if HandBrakeCLI is not in your PATH
     input_folder = folder_to_check
 
     if os.path.exists(folder_to_check):
@@ -67,7 +70,7 @@ def main():
             print("Empty folders deleted successfully.")
 
         if os.path.exists(input_folder):
-            reencode_to_av1(input_folder, handbrake_path)
+            reencode_to_av1(input_folder)
             print("Reencoding to AV1 completed successfully.")
         else:
             print("The specified video folder does not exist.")
